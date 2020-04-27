@@ -18,31 +18,19 @@
 
  File Name:
 
-      LBeacon.c
+      Agent.c
 
  Version:
 
-       2.0,  20190911
+       1.0,  20200427
 
  Abstract:
 
-      BeDIS uses LBeacons to deliver 3D coordinates and textual
-      descriptions of their locations to users' devices. Basically, a
-      LBeacon is an inexpensive, Bluetooth Smart Ready device. The 3D
-      coordinates and location description of every LBeacon are retrieved
-      from BeDIS (Building/environment Data and Information System) server
-      and stored locally during deployment and maintenance times. Once
-      initialized, each LBeacon broadcasts its coordinates and location
-      description to Bluetooth enabled user devices within its coverage
-      area.
+      To Recieve the alert signal from LBeacon.
 
  Authors:
 
-      Holly Wang, hollywang@iis.sinica.edu.tw
-      Jake Lee, jakelee@iis.sinica.edu.tw
-      Joey Zhou, joeyzhou@iis.sinica.edu.tw
-      Kenneth Tang, kennethtang@iis.sinica.edu.tw
-      Chun-Yu Lai, chunyu1202@gmail.com
+      Wayne Kang, biggkqq@gmail.com
 
 */
 
@@ -52,8 +40,6 @@ ErrorCode Wifi_init(){
     /* Initialize the Wifi cinfig file */
     if(udp_initial(&udp_config, 9998)
                    != WORK_SUCCESSFULLY){
-        
-
         /* Error handling TODO */
         return E_WIFI_INIT_FAIL;
     }
