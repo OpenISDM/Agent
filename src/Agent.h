@@ -7,42 +7,26 @@ License:
     conditions defined in file 'COPYING.txt', which is part of this source
     code package.
 
-Project Name:
-
-    BeDIS
-
 File Description:
 
-    This header file contains declarations of variables, structs and
-    functions and definitions of global variables used in the LBeacon.c file.
+      This file contains the programs executed by location beacons to
+      support indoor poositioning and object tracking functions.
 
-File Name:
+ File Name:
 
-    LBeacon.h
+      Agent.h
 
-Version:
+ Version:
 
-    2.0,  20190911
+       1.0,  20200427
 
-Abstract:
+ Abstract:
 
-    BeDIS uses LBeacons to deliver 3D coordinates and textual
-    descriptions of their locations to users' devices. Basically, a
-    LBeacon is an inexpensive, Bluetooth Smart Ready device. The 3D
-    coordinates and location description of every LBeacon are retrieved
-    from BeDIS (Building/environment Data and Information System) and
-    stored locally during deployment and maintenance times. Once
-    initialized, each LBeacon broadcasts its coordinates and location
-    description to Bluetooth enabled user devices within its coverage
-    area.
+      To Recieve the alert signal from LBeacon.
 
-Authors:
+ Authors:
 
-    Han Wang, hollywang@iis.sinica.edu.tw
-    Jake Lee, jakelee@iis.sinica.edu.tw
-    Joey Zhou, joeyzhou@iis.sinica.edu.tw
-    Kenneth Tang, kennethtang@iis.sinica.edu.tw
-    Chun Yu Lai, chunyu1202@gmail.com
+      Wayne Kang, biggkqq@gmail.com
 
 */
 
