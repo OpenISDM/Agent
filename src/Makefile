@@ -8,7 +8,7 @@ INC = -I ../import
 #---------------------------------------------------------------------------
 all: Agent
 Agent: $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o Agent $(INC) $(LIB) -lrt -lpthread -lbfb -lbluetooth -lwiringPi -lzlog 
+	$(CC) $(OBJS) $(CFLAGS) -o Agent $(INC) $(LIB) -lrt -lpthread -lbfb -lbluetooth -lwiringPi -lzlog -lEncrypt 
 	
 
 Agent.o: 
