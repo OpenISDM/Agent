@@ -58,13 +58,11 @@ int main(int argc, char **argv) {
     ErrorCode return_value = WORK_SUCCESSFULLY;
     return_value = Wifi_init();
     if(return_value == WORK_SUCCESSFULLY){
-      printf("Success!!\n");
       while(true){
         sPkt recv_queue = udp_getrecv(&udp_config);
         
         if(strlen(recv_queue. content)) {
           udp_addpkt(&udp_config, "127.0.0.1", 9997, recv_queue.content, strlen(recv_queue.content));
-          printf("get, %s!!\n", recv_queue.content);
         }else{
           sleep_t(NORMAL_WAITING_TIME_IN_MS);
         }
