@@ -158,6 +158,23 @@ int udp_initial(pudp_config udp_config, int recv_port);
 
 int udp_addpkt_without_encoding(pudp_config udp_config, char *address, unsigned int port, 
                char *content, int size);
+               
+               
+/*
+  udp_getrecv_without_encoding
+
+     This function is used for get received packet from the received queue without AES encoding and sha256 hash.
+
+  Parameter:
+
+     udp_config : The pointer points to the  structure contains all variables   
+                  for the UDP connection.
+
+  Return Value:
+
+     sPkt : return the first pkt content in the received queue.
+ */
+sPkt udp_getrecv_without_encoding(pudp_config udp_config);
 
 /*
   udp_addpkt

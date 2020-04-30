@@ -120,6 +120,14 @@ int udp_addpkt_without_encoding(pudp_config udp_config, char *address, unsigned 
     return 0;
 }
 
+sPkt udp_getrecv_without_encoding(pudp_config udp_config)
+{
+
+    sPkt tmp = get_pkt(&udp_config -> Received_Queue);
+
+    return tmp;
+}
+
 int udp_addpkt(pudp_config udp_config, char *address, unsigned int port, 
                char *content, int size)
 {

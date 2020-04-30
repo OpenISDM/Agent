@@ -32,7 +32,7 @@
 *.dSYM/
 
 # LBeacon build files
-LBeacon
+
 ftp-sync.json
 settings.json
 output.txt
