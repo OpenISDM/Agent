@@ -9,7 +9,7 @@ INC = -I ../import -I ../import/libEncrypt
 all: Agent
 Agent: $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) -o Agent $(INC) $(LIB) -lpthread -lzlog -lEncrypt
-	
+	mv ./Agent ../bin
 
 Agent.o: 
 	$(CC) Agent.c Agent.h $(INC) $(LIB) -c
