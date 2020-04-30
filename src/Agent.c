@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         sPkt recv_queue = udp_getrecv(&udp_config);
         
         if(strlen(recv_queue. content)) {
-          udp_addpkt(&udp_config, "127.0.0.1", 9997, recv_queue.content, strlen(recv_queue.content));
+          udp_addpkt_without_encoding(&udp_config, "127.0.0.1", 9997, recv_queue.content, strlen(recv_queue.content));
         }else{
           sleep_t(NORMAL_WAITING_TIME_IN_MS);
         }

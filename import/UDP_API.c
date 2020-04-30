@@ -108,6 +108,17 @@ int udp_initial(pudp_config udp_config, int recv_port)
     return 0;
 }
 
+int udp_addpkt_without_encoding(pudp_config udp_config, char *address, unsigned int port, 
+               char *content, int size)
+{
+
+    if(size > MESSAGE_LENGTH)
+        return addpkt_msg_oversize;
+
+    addpkt(&udp_config -> pkt_Queue, address, port, content, size);
+
+    return 0;
+}
 
 int udp_addpkt(pudp_config udp_config, char *address, unsigned int port, 
                char *content, int size)
@@ -160,6 +171,7 @@ sPkt udp_getrecv(pudp_config udp_config)
         
     if(0 != strncmp(decodedtext, content_sha256, strlen(content_sha256)))
         return empty_pkt;
+
     strcpy(tmp.content, save_ptr);
     tmp.content_size = strlen(tmp.content);
 
