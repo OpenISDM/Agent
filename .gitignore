@@ -31,8 +31,8 @@
 # Debug files
 *.dSYM/
 
-# LBeacon build files
-
+# Agent build files
+Agent
 ftp-sync.json
 settings.json
 output.txt
