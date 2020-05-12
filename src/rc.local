@@ -19,6 +19,6 @@ fi
 
 cd /home/bedis/Agent/bin/
 chmod 755 /home/bedis/Agent/bin/auto_Agent.sh
-/home/bedis/Agent/bin/auto_LBeacon.sh
+/home/bedis/Agent/bin/auto_Agent.sh
 
 exit 0
