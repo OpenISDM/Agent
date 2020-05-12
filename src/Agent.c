@@ -96,6 +96,18 @@ void Wifi_free(){
 int main(int argc, char **argv) {
     ErrorCode return_value = WORK_SUCCESSFULLY;
     ErrorCode config_value = get_config(&g_config, CONFIG_FILE_NAME);
+    struct sigaction sigint_handler;
+    /* Register handler function for SIGINT signal */
+    sigint_handler.sa_handler = ctrlc_handler;
+    sigemptyset(&sigint_handler.sa_mask);
+    sigint_handler.sa_flags = 0;
+
+    if (-1 == sigaction(SIGINT, &sigint_handler, NULL)) {
+        zlog_error(category_health_report,
+                   "Error registering signal handler for SIGINT");
+        zlog_error(category_debug,
+                   "Error registering signal handler for SIGINT");
+    }
     return_value = Wifi_init();
     if(return_value == WORK_SUCCESSFULLY){
       while(true){
