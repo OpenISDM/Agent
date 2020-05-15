@@ -1,6 +1,10 @@
 import serial
 import socket
 import time
+import sys
+sys.path.append("../config/")
+import conf
+
 FROM_SOURCE_TYPE 	= 0
 FIRE_ALARM 		= 1
 API_VERSION 	        = 2
@@ -37,7 +41,7 @@ conn.write('FQ')
 
 # setup UDP client port
 IP = get_host_ip()
-serverAddressPort   = ("127.0.0.1", 9997)
+serverAddressPort   = ("127.0.0.1", conf.light_controller_port)
 bufferSize  = 1024
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(serverAddressPort)
@@ -45,17 +49,14 @@ print('Start UDP Server Listening at port: {}'.format(IP))
 
 while True:
 	bytesAddressPair = sock.recvfrom(bufferSize)
-	print(bytesAddressPair[0], bytesAddressPair[1])
-	print(bytesAddressPair[0], bytesAddressPair[1])
 	message = bytesAddressPair[0]
 	address = bytesAddressPair[1]
 	API_ver = None
-	print('received message: {}, from: {}'.format(message, address))
 	splitted_message = message.split(';')
-	if(splitted_message[FROM_SOURCE_TYPE] != '2'):
+	if(splitted_message[FROM_SOURCE_TYPE] != str(conf.from_server)):
 		print('Data aren\'t from Server')
 		continue
-	elif(splitted_message[FIRE_ALARM] != '7'):
+	elif(splitted_message[FIRE_ALARM] != str(conf.fire_alarm)):
 		print('FIRE_ALARM Error')
 		continue
 	else:
