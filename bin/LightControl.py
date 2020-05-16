@@ -10,6 +10,10 @@ FIRE_ALARM 		= 1
 API_VERSION 	        = 2
 MODE 			= 3
 DURATION 		= 4
+
+FROM_SERVER = str(2)
+FIRE_ALARM = str(7)
+
 def get_host_ip():
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -53,10 +57,10 @@ while True:
 	address = bytesAddressPair[1]
 	API_ver = None
 	splitted_message = message.split(';')
-	if(splitted_message[FROM_SOURCE_TYPE] != str(conf.from_server)):
+	if(splitted_message[FROM_SOURCE_TYPE] != str(FROM_SERVER)):
 		print('Data aren\'t from Server')
 		continue
-	elif(splitted_message[FIRE_ALARM] != str(conf.fire_alarm)):
+	elif(splitted_message[FIRE_ALARM] != str(FIRE_ALARM)):
 		print('FIRE_ALARM Error')
 		continue
 	else:
