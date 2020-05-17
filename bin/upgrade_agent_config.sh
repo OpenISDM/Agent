@@ -2,12 +2,12 @@
 
 echo "Upgrade configuration file"
 config_new="/home/bedis/Agent/config/conf.conf"
-config_save="/home/bedis/upgrade-Agent/config_save.conf"
-config_result="/home/bedis/Agent/config/config_result.conf"
+config_save="/home/bedis/upgrade-Agent/conf_save.conf"
+config_result="/home/bedis/Agent/config/conf_result.conf"
 
 config_py_new="/home/bedis/Agent/config/conf.py"
-config_py_save="/home/bedis/upgrade-Agent/config_py_save.py"
-config_py_result="/home/bedis/Agent/config/config_py_result.py"
+config_py_save="/home/bedis/upgrade-Agent/conf_py_save.py"
+config_py_result="/home/bedis/Agent/config/conf_py_result.py"
 
 
 ###########################################
