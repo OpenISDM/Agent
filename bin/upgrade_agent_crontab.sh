@@ -34,10 +34,11 @@ sudo chmod 755 /home/bedis/Agent/bin/kill_Agent.sh
 sudo /home/bedis/Agent/bin/kill_Agent.sh
 
 echo "backup existing configration file"
-sudo cp /home/bedis/Agent/config/config.conf /home/bedis/upgrade-Agent/config_save.conf 
+sudo cp /home/bedis/Agent/config/conf.conf /home/bedis/upgrade-Agent/conf_save.conf 
+sudo cp /home/bedis/Agent/config/conf.py /home/bedis/upgrade-Agent/conf_save.py 
 
-echo "backup existing self_check.sh"
-sudo cp /home/bedis/Agent/bin/self_check.sh /home/bedis/upgrade-Agent/self_check.sh.bak
+# echo "backup existing self_check.sh"
+# sudo cp /home/bedis/Agent/bin/self_check.sh /home/bedis/upgrade-Agent/self_check.sh.bak
 
 echo "remove existing version files"
 sudo rm -f /home/bedis/Agent/*.txt
