@@ -5,11 +5,11 @@ import sys
 sys.path.append("../config/")
 import conf
 
-FROM_SOURCE_TYPE 	= 0
-FIRE_ALARM 		= 1
-API_VERSION 	        = 2
-MODE 			= 3
-DURATION 		= 4
+INDEX_SOURCE_TYPE 	= 0
+INDEX_PACKET_TYPE 	= 1
+INDEX_API_VERSION       = 2
+INDEX_MODE 	        = 3
+INDEX_DURATION 		= 4
 
 FROM_SERVER = str(2)
 FIRE_ALARM = str(7)
@@ -57,15 +57,15 @@ while True:
 	address = bytesAddressPair[1]
 	API_ver = None
 	splitted_message = message.split(';')
-	if(splitted_message[FROM_SOURCE_TYPE] != str(FROM_SERVER)):
+	if(splitted_message[INDEX_SOURCE_TYPE] != str(FROM_SERVER)):
 		print('Data aren\'t from Server')
 		continue
-	elif(splitted_message[FIRE_ALARM] != str(FIRE_ALARM)):
+	elif(splitted_message[INDEX_PACKET_TYPE] != str(FIRE_ALARM)):
 		print('FIRE_ALARM Error')
 		continue
 	else:
-		API_ver = splitted_message[API_VERSION]
-                mode = int(splitted_message[MODE])
-		duration = int(splitted_message[DURATION])
+		API_ver = splitted_message[INDEX_API_VERSION]
+                mode = int(splitted_message[INDEX_MODE])
+		duration = int(splitted_message[INDEX_DURATION])
 		alert_operation(mode, duration)
 	        time.sleep(0.3)
