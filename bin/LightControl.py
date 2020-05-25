@@ -12,7 +12,13 @@ INDEX_MODE 	        = 3
 INDEX_DURATION 		= 4
 
 FROM_SERVER = str(2)
-FIRE_ALARM = str(7)
+
+FIRE_ALARM  = str(7)
+
+ALARM_TYPE_NONE = 0
+ALARM_TYPE_LIGHT = 1
+ALARM_TYPE_SOUND = 2
+ALARM_TYPE_LIGHT_SOUND = 3
 
 def get_host_ip():
 	try:
@@ -22,19 +28,25 @@ def get_host_ip():
 	finally:
 		s.close()
 	return ip
+
 def alert_operation(mode, duration):
-	if(mode == 1):
+	if(mode == ALARM_TYPE_NONE):
+                conn.write('FQ')
+        elif(mode == ALARM_TYPE_LIGHT):
 		conn.write('RO')
-		time.sleep(duration)
-		conn.write('FQ')
-	elif(mode == 2):
+                if(duration > 0):
+      		    time.sleep(duration)
+		    conn.write('FQ')
+	elif(mode == ALARM_TYPE_SOUND):
 		conn.write('1P')
-		time.sleep(duration)
-		conn.write('FQ')
-	elif(mode == 3):
+                if(duration > 0):
+		    time.sleep(duration)
+		    conn.write('FQ')
+	elif(mode == ALARM_TYPE_LIGHT_SOUND):
 		conn.write('RO1P')
-		time.sleep(duration)
-		conn.write('FQ')
+                if(duration > 0):
+		    time.sleep(duration)
+		    conn.write('FQ')
 	else: 
 		print('unrecognized mode')
 
@@ -57,15 +69,12 @@ while True:
 	address = bytesAddressPair[1]
 	API_ver = None
 	splitted_message = message.split(';')
-	if(splitted_message[INDEX_SOURCE_TYPE] != str(FROM_SERVER)):
-		print('Data aren\'t from Server')
-		continue
-	elif(splitted_message[INDEX_PACKET_TYPE] != str(FIRE_ALARM)):
-		print('FIRE_ALARM Error')
-		continue
-	else:
+	if(splitted_message[INDEX_SOURCE_TYPE] == str(FROM_SERVER)):
+	    if(splitted_message[INDEX_PACKET_TYPE] == str(FIRE_ALARM)):
 		API_ver = splitted_message[INDEX_API_VERSION]
                 mode = int(splitted_message[INDEX_MODE])
 		duration = int(splitted_message[INDEX_DURATION])
 		alert_operation(mode, duration)
 	        time.sleep(0.3)
+        else:
+            print('Unknow request', message)
