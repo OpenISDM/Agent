@@ -200,6 +200,8 @@ int main(int argc, char **argv) {
                    "Unable to initialize network");
         zlog_error(category_debug,
                    "Unable to initialize network");
+                   
+        return E_WIFI_INIT_FAIL;
     }
         
     while(ready_to_work){
