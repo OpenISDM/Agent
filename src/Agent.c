@@ -26,7 +26,7 @@
 
  Abstract:
 
-      To Recieve the alert signal from LBeacon.
+      To Recieve the alert signal from server.
 
  Authors:
 
@@ -93,6 +93,56 @@ void Wifi_free(){
     return (void)NULL; 
 }
 
+ErrorCode single_running_instance(char *file_name){
+    int retry_times = 0;
+    int lock_file = 0;
+    struct flock fl;
+
+    retry_times = FILE_OPEN_RETRY;
+    while(retry_times--){
+        lock_file = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0644);
+
+        if(-1 != lock_file){
+            break;
+        }
+    }
+
+    if(-1 == lock_file){
+        zlog_error(category_health_report,
+            "Unable to open lock file");
+        zlog_error(category_debug,
+            "Unable to open lock file");
+        return E_OPEN_FILE;
+    }
+
+    fl.l_type = F_WRLCK;
+    fl.l_whence = SEEK_SET;
+    fl.l_start = 0;
+    fl.l_len = 0;
+
+    if(fcntl(lock_file, F_SETLK, &fl) == -1){
+        zlog_error(category_health_report, "Unable to lock file");
+        zlog_error(category_debug, "Unable to lock file");
+        close(lock_file);
+        return E_OPEN_FILE;
+    }
+
+    char pids[10];
+    snprintf(pids, sizeof(pids), "%d\n", getpid());
+    if((size_t)write(lock_file, pids, strlen(pids)) != strlen(pids)){
+
+        zlog_error(category_health_report,
+                   "Unable to write pid into lock file");
+        zlog_error(category_debug,
+                   "Unable to write pid into lock file");
+        close(lock_file);
+
+        return E_OPEN_FILE;
+    }
+
+    return WORK_SUCCESSFULLY;
+}
+
 int main(int argc, char **argv) {
     ErrorCode return_value = WORK_SUCCESSFULLY;
     ErrorCode config_value = get_config(&g_config, CONFIG_FILE_NAME);
@@ -103,26 +153,72 @@ int main(int argc, char **argv) {
     sigemptyset(&sigint_handler.sa_mask);
     sigint_handler.sa_flags = 0;
 
+    /* Initialize the application log */
+    if (zlog_init(LOG_FILE_NAME) == 0) {
+
+        category_health_report =
+            zlog_get_category(LOG_CATEGORY_HEALTH_REPORT);
+
+        if (!category_health_report) {
+            zlog_fini();
+        }
+
+        category_debug =
+            zlog_get_category(LOG_CATEGORY_DEBUG);
+
+        if (!category_debug) {
+            zlog_fini();
+        }
+    }
+    
+    /* Ensure there is only single running instance */
+    return_value = single_running_instance(AGENT_LOCK_FILE);
+    if(WORK_SUCCESSFULLY != return_value){
+        zlog_error(category_health_report,
+                   "Error openning lock file");
+        zlog_error(category_debug,
+                   "Error openning lock file");
+        return E_OPEN_FILE;
+    }
+    
+    zlog_info(category_health_report,
+              "Agent process is launched...");
+    zlog_info(category_debug,
+              "Agent process is launched...");
+              
     if (-1 == sigaction(SIGINT, &sigint_handler, NULL)) {
         zlog_error(category_health_report,
                    "Error registering signal handler for SIGINT");
         zlog_error(category_debug,
                    "Error registering signal handler for SIGINT");
     }
+    
     return_value = Wifi_init();
-    if(return_value == WORK_SUCCESSFULLY){
-      while(ready_to_work){
+    
+    if(return_value != WORK_SUCCESSFULLY){
+        zlog_error(category_health_report,
+                   "Unable to initialize network");
+        zlog_error(category_debug,
+                   "Unable to initialize network");
+    }
+        
+    while(ready_to_work){
+        
         sPkt recv_queue = udp_getrecv(&udp_config);
         
-        if(strlen(recv_queue. content)) {
-          udp_addpkt_without_encoding(&udp_config, "127.0.0.1", g_config.light_controller_port, recv_queue.content, strlen(recv_queue.content));
+        if(strlen(recv_queue.content)) {
+            zlog_debug(category_debug, 
+                       "received message = [%s]",
+                       recv_queue.content);
+                           
+            udp_addpkt_without_encoding(&udp_config, 
+                                        "127.0.0.1", 
+                                        g_config.light_controller_port, 
+                                        recv_queue.content, 
+                                        strlen(recv_queue.content));
         }else{
-          sleep_t(NORMAL_WAITING_TIME_IN_MS);
+            sleep_t(NORMAL_WAITING_TIME_IN_MS);
         }
-      }
-    }else{
-      printf("Wrong!!\n");
     }
-    
 }
 

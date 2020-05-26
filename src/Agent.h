@@ -9,29 +9,29 @@ License:
 
 File Description:
 
-      This file contains the programs executed by location beacons to
-      support indoor poositioning and object tracking functions.
+    This file contains the programs executed by location beacons to
+    support indoor poositioning and object tracking functions.
 
  File Name:
 
-      Agent.h
+    Agent.h
 
  Version:
 
-       1.0,  20200427
+    1.0,  20200427
 
  Abstract:
 
-      To Recieve the alert signal from LBeacon.
+    To Recieve the alert signal from server.
 
  Authors:
 
-      Wayne Kang, biggkqq@gmail.com
+    Wayne Kang, biggkqq@gmail.com
 
 */
 
-#ifndef LBEACON_H
-#define LBEACON_H
+#ifndef AGENT_H
+#define AGENT_H
 
 /*
 * INCLUDES
@@ -39,7 +39,14 @@ File Description:
 #include "BeDIS.h"
 #include "Version.h"
 
+/* File path of the config file of the Agent */
 #define CONFIG_FILE_NAME "../config/conf.conf"
+
+/* File path of the logging file*/
+#define LOG_FILE_NAME "../config/zlog.conf"
+
+/* The lock file for Agent  */
+#define AGENT_LOCK_FILE "../log/Agent.pid"
 
 typedef struct Config {
     int agent_port;
@@ -89,22 +96,23 @@ ErrorCode Wifi_init();
 */
 void Wifi_free();
 
-/*
-  EXTERNAL FUNCTIONS
-*/
 
 /*
-  opendir:
+  single_running_instance:
 
-      This function is called to open a specified directory.
+      This function write a file lock to ensure that system has only one
+      instance of running Agent.
 
   Parameters:
-
-      dirname - the name of the directory to be opened.
+      file_name - the name of the lock file that specifies PID of running
+                  Agent
 
   Return value:
+      ErrorCode - indicate the result of execution, the expected return code
+                  is WORK_SUCCESSFULLY
 
-      dirp - a pointer to the directory stream.
 */
 
-#endif /* LBEACON_H */
+ErrorCode single_running_instance(char *file_name);
+
+#endif /* AGENT_H */
