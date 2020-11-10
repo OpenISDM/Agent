@@ -60,9 +60,17 @@ ErrorCode get_config(Config *config, char *file_name) {
 
     /* item 1 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
-    config -> agent_port = atoi(config_message);
+    memcpy(config->server_ip, config_message, sizeof(config->server_ip));
     
     /* item 2 */
+    fetch_next_string(file, config_message, sizeof(config_message)); 
+    config -> server_port = atoi(config_message);
+    
+    /* item 3 */
+    fetch_next_string(file, config_message, sizeof(config_message)); 
+    config -> agent_port = atoi(config_message);
+    
+    /* item 4 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
     config -> light_controller_port = atoi(config_message);
     
@@ -138,6 +146,24 @@ ErrorCode single_running_instance(char *file_name){
     return WORK_SUCCESSFULLY;
 }
 
+
+ErrorCode send_join_request(){
+    char message[WIFI_MESSAGE_LENGTH];
+    int ret_val = 0;
+
+    memset(message, 0, sizeof(message));
+
+    sprintf(message, "%d;%d
+
+    udp_addpkt( &udp_config, 
+                g_config.server_ip, 
+                g_config.server_port,
+                message,
+                sizeof(message));
+
+    return WORK_SUCCESSFULLY;
+}
+
 int main(int argc, char **argv) {
     ErrorCode return_value = WORK_SUCCESSFULLY;
     ErrorCode config_value = get_config(&g_config, CONFIG_FILE_NAME);
@@ -147,6 +173,7 @@ int main(int argc, char **argv) {
     sigint_handler.sa_handler = ctrlc_handler;
     sigemptyset(&sigint_handler.sa_mask);
     sigint_handler.sa_flags = 0;
+    int last_join_request_time = 0;
 
     /* Initialize the application log */
     if (zlog_init(LOG_FILE_NAME) == 0) {
@@ -199,7 +226,21 @@ int main(int argc, char **argv) {
         return E_WIFI_INIT_FAIL;
     }
         
+    last_join_request_time = 0;
+        
     while(ready_to_work){
+        
+        current_time = get_clock_time();
+        if( current_time - last_join_request_time >
+            INTERVAL_FOR_RECONNECT_SERVER_IN_SEC ){
+
+            zlog_info(category_debug,
+                      "Send requets_to_join to server again");
+
+            if(WORK_SUCCESSFULLY == send_join_request()){
+                last_join_request_time = current_time;
+            }
+        }
         
         sPkt recv_queue = udp_getrecv(&udp_config);
         

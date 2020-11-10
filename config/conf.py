@@ -1,1 +1,1 @@
-light_controller_port = 9997
+light_controller_port=9988

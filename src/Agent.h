@@ -47,8 +47,21 @@
 /* The lock file for Agent  */
 #define AGENT_LOCK_FILE "../log/Agent.pid"
 
+/* Time interval in seconds for reconnect to server */
+#define INTERVAL_FOR_RECONNECT_SERVER_IN_SEC 30
+
 typedef struct Config {
+    
+    /* The IP address of the server */
+    char server_ip[NETWORK_ADDR_LENGTH];
+
+    /* A port that the server are listening on and for agent to send to. */
+    int server_port;
+    
+    /* A port for agent to send on */
     int agent_port;
+    
+    /* A port for internal light controller to send on */
     int light_controller_port;
 } Config;
 
@@ -113,5 +126,22 @@ void Wifi_free();
 */
 
 ErrorCode single_running_instance(char *file_name);
+
+/*
+  send_join_request:
+
+      This function sends join_request to server.
+
+  Parameters:
+
+      None
+
+  Return value:
+
+      ErrorCode - The error code for the corresponding error if the function
+                  fails or WORK SUCCESSFULLY otherwise
+*/
+
+ErrorCode send_join_request();
 
 #endif /* AGENT_H */

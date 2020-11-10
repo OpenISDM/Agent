@@ -52,10 +52,12 @@
 
 #define BOT_SERVER_API_VERSION_22 "2.2"
 
-#define BOT_SERVER_API_VERSION_LATEST "2.3"
+#define BOT_SERVER_API_VERSION_23 "2.3"
+
+#define BOT_SERVER_API_VERSION_LATEST "2.4"
 
 /* The size of message to be sent over WiFi in bytes */
-#define WIFI_MESSAGE_LENGTH 4096
+#define WIFI_MESSAGE_LENGTH 8192
 
 /* Length of the IP address in byte */
 #define NETWORK_ADDR_LENGTH 16
@@ -87,6 +89,7 @@ typedef enum pkt_types {
 
     /* A pkt containing IPC command */
     ipc_command = 8,
+
 } PktType;
 
 typedef enum pkt_direction {
@@ -102,12 +105,17 @@ typedef enum pkt_direction {
     /* pkt from beacon */
     from_beacon = 8,
 
+    /* pkt from agent */
+    from_agent = 9,
+
 } PktDirection;
 
 typedef enum IPCCommand {
 
     CMD_NONE = 0,
     CMD_RELOAD_GEO_FENCE_SETTING = 1,
+    CMD_STOP_LIGHT_ALARM = 2,
+    CMD_RELOAD_LBEACON_SETTING = 3,
     CMD_MAX,
 
 } IPCCommand;

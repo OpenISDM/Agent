@@ -1,7 +1,7 @@
 /*
   2020 © Copyright (c) BiDaE Technology Inc. 
   Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
   Project Name:
 
      BeDIS
