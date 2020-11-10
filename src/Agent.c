@@ -153,7 +153,9 @@ ErrorCode send_join_request(){
 
     memset(message, 0, sizeof(message));
 
-    sprintf(message, "%d;%d
+    sprintf(message, "%d;%d;%d;", from_agent, 
+                                  request_to_join, 
+                                  BOT_SERVER_API_VERSION_LATEST);
 
     udp_addpkt( &udp_config, 
                 g_config.server_ip, 
