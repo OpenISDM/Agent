@@ -165,12 +165,14 @@ ErrorCode send_join_request(){
 
     memset(message, 0, sizeof(message));
 
-    sprintf(message, "%d;%d;%d;%s;%s;", from_agent, 
+    sprintf(message, "%d;%d;%s;%s;%s;", from_agent, 
                                   request_to_join, 
                                   BOT_SERVER_API_VERSION_LATEST,
                                   g_config.area_id,
                                   g_config.serial_id);
-
+    printf("%s\n", message);
+                                  
+                             
     udp_addpkt( &udp_config, 
                 g_config.server_ip, 
                 g_config.server_port,
