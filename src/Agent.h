@@ -52,6 +52,10 @@
 
 typedef struct Config {
     
+    char area_id[CONFIG_BUFFER_SIZE];
+    
+    char serial_id[CONFIG_BUFFER_SIZE];
+        
     /* The IP address of the server */
     char server_ip[NETWORK_ADDR_LENGTH];
 

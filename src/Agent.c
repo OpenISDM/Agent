@@ -60,17 +60,29 @@ ErrorCode get_config(Config *config, char *file_name) {
 
     /* item 1 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
-    memcpy(config->server_ip, config_message, sizeof(config->server_ip));
+    memcpy(config->area_id, config_message, sizeof(config->area_id));
+    
+    zlog_debug(category_debug, "area_id = [%s]", config->area_id);
     
     /* item 2 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
-    config -> server_port = atoi(config_message);
+    memcpy(config->serial_id, config_message, sizeof(config->serial_id));
+    
+    zlog_debug(category_debug, "serial_id = [%s]", config->serial_id);
     
     /* item 3 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
-    config -> agent_port = atoi(config_message);
+    memcpy(config->server_ip, config_message, sizeof(config->server_ip));
     
     /* item 4 */
+    fetch_next_string(file, config_message, sizeof(config_message)); 
+    config -> server_port = atoi(config_message);
+    
+    /* item 5 */
+    fetch_next_string(file, config_message, sizeof(config_message)); 
+    config -> agent_port = atoi(config_message);
+    
+    /* item 6 */
     fetch_next_string(file, config_message, sizeof(config_message)); 
     config -> light_controller_port = atoi(config_message);
     
@@ -153,9 +165,11 @@ ErrorCode send_join_request(){
 
     memset(message, 0, sizeof(message));
 
-    sprintf(message, "%d;%d;%d;", from_agent, 
+    sprintf(message, "%d;%d;%d;%s;%s;", from_agent, 
                                   request_to_join, 
-                                  BOT_SERVER_API_VERSION_LATEST);
+                                  BOT_SERVER_API_VERSION_LATEST,
+                                  g_config.area_id,
+                                  g_config.serial_id);
 
     udp_addpkt( &udp_config, 
                 g_config.server_ip, 
@@ -168,7 +182,7 @@ ErrorCode send_join_request(){
 
 int main(int argc, char **argv) {
     ErrorCode return_value = WORK_SUCCESSFULLY;
-    ErrorCode config_value = get_config(&g_config, CONFIG_FILE_NAME);
+    ErrorCode config_value = WORK_SUCCESSFULLY;
     ready_to_work = true;
     struct sigaction sigint_handler;
     /* Register handler function for SIGINT signal */
@@ -176,6 +190,7 @@ int main(int argc, char **argv) {
     sigemptyset(&sigint_handler.sa_mask);
     sigint_handler.sa_flags = 0;
     int last_join_request_time = 0;
+    int current_time;
 
     /* Initialize the application log */
     if (zlog_init(LOG_FILE_NAME) == 0) {
@@ -209,7 +224,9 @@ int main(int argc, char **argv) {
               "Agent process is launched...");
     zlog_info(category_debug,
               "Agent process is launched...");
-              
+    
+    config_value = get_config(&g_config, CONFIG_FILE_NAME);
+    
     if (-1 == sigaction(SIGINT, &sigint_handler, NULL)) {
         zlog_error(category_health_report,
                    "Error registering signal handler for SIGINT");
