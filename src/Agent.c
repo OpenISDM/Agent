@@ -170,8 +170,6 @@ ErrorCode send_join_request(){
                                   BOT_SERVER_API_VERSION_LATEST,
                                   g_config.area_id,
                                   g_config.serial_id);
-    printf("%s\n", message);
-                                  
                              
     udp_addpkt( &udp_config, 
                 g_config.server_ip, 
