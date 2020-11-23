@@ -2,7 +2,7 @@ import serial
 import socket
 import time
 import sys
-sys.path.append("../config/")
+sys.path.append("/home/bedis/Agent/config/")
 import conf
 
 INDEX_SOURCE_TYPE 	= 0
@@ -19,15 +19,6 @@ ALARM_TYPE_NONE = 0
 ALARM_TYPE_LIGHT = 1
 ALARM_TYPE_SOUND = 2
 ALARM_TYPE_LIGHT_SOUND = 3
-
-def get_host_ip():
-	try:
-		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		s.connect(('8.8.8.8',80))
-		ip = s.getsockname()[0]
-	finally:
-		s.close()
-	return ip
 
 def alert_operation(mode, duration):
 	if(mode == ALARM_TYPE_NONE):
@@ -56,12 +47,10 @@ time.sleep(3)
 conn.write('FQ')
 
 # setup UDP client port
-IP = get_host_ip()
 serverAddressPort   = ("127.0.0.1", conf.light_controller_port)
 bufferSize  = 1024
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(serverAddressPort)
-print('Start UDP Server Listening at port: {}'.format(IP))
 
 while True:
 	bytesAddressPair = sock.recvfrom(bufferSize)
