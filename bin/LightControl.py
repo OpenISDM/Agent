@@ -25,19 +25,10 @@ def alert_operation(mode, duration):
                 conn.write('FQ')
         elif(mode == ALARM_TYPE_LIGHT):
 		conn.write('RO')
-                if(duration > 0):
-      		    time.sleep(duration)
-		    conn.write('FQ')
 	elif(mode == ALARM_TYPE_SOUND):
 		conn.write('1P')
-                if(duration > 0):
-		    time.sleep(duration)
-		    conn.write('FQ')
 	elif(mode == ALARM_TYPE_LIGHT_SOUND):
 		conn.write('RO1P')
-                if(duration > 0):
-		    time.sleep(duration)
-		    conn.write('FQ')
 	else: 
 		print('unrecognized mode')
 
@@ -50,10 +41,15 @@ conn.write('FQ')
 serverAddressPort   = ("127.0.0.1", conf.light_controller_port)
 bufferSize  = 1024
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setblocking(False)
 sock.bind(serverAddressPort)
 
+last_alert_time = 0
+duration = 0
+
 while True:
-	bytesAddressPair = sock.recvfrom(bufferSize)
+    try:
+	bytesAddressPair = sock.recvfrom(bufferSize)     
 	message = bytesAddressPair[0]
 	address = bytesAddressPair[1]
 	API_ver = None
@@ -63,7 +59,21 @@ while True:
 		API_ver = splitted_message[INDEX_API_VERSION]
                 mode = int(splitted_message[INDEX_MODE])
 		duration = int(splitted_message[INDEX_DURATION])
+                last_alert_time = time.time()
+	        if(mode == ALARM_TYPE_NONE):
+                    last_alert_time = 0
 		alert_operation(mode, duration)
 	        time.sleep(0.3)
         else:
             print('Unknow request', message)
+    except:
+        pass
+   
+    current_time = time.time()
+    if(last_alert_time):
+        diff = (current_time - last_alert_time)
+        if(diff > 0 and diff > duration):
+            last_alert_time = 0
+            duration = 0
+            conn.write('FQ')
+    
