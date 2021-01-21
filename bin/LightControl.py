@@ -68,11 +68,12 @@ while True:
             print('Unknow request', message)
     except:
         pass
-   
-    current_time = time.time()
+
+    time.sleep(0.3)
     if(last_alert_time):
+        current_time = time.time()
         diff = (current_time - last_alert_time)
-        if(diff > 0 and diff > duration):
+        if(duration > 0 and diff > duration):
             last_alert_time = 0
             duration = 0
             conn.write('FQ')
